@@ -40,8 +40,9 @@ class OAuthAuth(BaseAuth):
         """Return access_token and extra defined names to store in
         extra_data field"""
         data = super().extra_data(user, uid, response, details, *args, **kwargs)
-        data['access_token'] = response.get('access_token', '') or \
-            kwargs.get('access_token')
+        data['access_token'] = (response.get('access_token', '') or
+            kwargs.get('access_token') or
+            (kwargs['request'].get('access_token') if 'request' in kwargs else None))
         return data
 
     def state_token(self):
